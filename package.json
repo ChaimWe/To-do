@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.16",
+    "concurrently": "^9.2.1"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19"
+  }
+}
