@@ -1,8 +1,8 @@
 import { Button, Form, Input, Modal} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { useSubmitTask } from "../hooks/useSubmitTask";
-import { NewTask } from "../interfaces/taskInterfaces";
+import { useSubmitTask } from "../../hooks/taskHooks/useSubmitTask";
+import { NewTask } from "../../interfaces/taskInterfaces";
 
 export default function AddTask() {
   const [form] = Form.useForm();

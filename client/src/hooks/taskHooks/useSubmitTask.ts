@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createTask } from "../api/taskApi";
+import { createTask } from "../../api/taskApi";
+import { message } from "antd";
 
 export function useSubmitTask() {
   const queryClient = useQueryClient();
@@ -8,9 +9,10 @@ export function useSubmitTask() {
     onSuccess:()=>{
       queryClient.invalidateQueries({queryKey:['tasks']});
     },
-    onError:(error)=>{
-      console.error("Failed to add task ",error)
+    onError:(err)=>{
+      console.error("Submit task failure: ",err);
+      message.error("Failed to add task")
     },
     meta:{operationName: 'Add task'}
   })
-}
+};

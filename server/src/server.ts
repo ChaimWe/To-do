@@ -2,20 +2,50 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import router from './routes/taskRoutes';
+import cookieParser from 'cookie-parser';
+import taskRoutes from "./routes/taskRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+// Load env reliably regardless of process CWD (e.g. started from repo root)
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET must be defined");
+}
+if (!process.env.MONGO_URI) {
+  throw new Error("MONGO_URI must be defined");
+}
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use('/api', router);
 
-mongoose
-  .connect(process.env.MONGO_URI || "")
-  .then(() => console.log("Mongo connected"))
-  .catch((err) => console.error(err));
+const allowedOrigins = process.env.CORS_ORIGINS?.split(",");
+app.use(cookieParser())
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
+app.use(express.json());
+app.use("/api/tasks", taskRoutes);
+app.use("/api/users", userRoutes);
+
+app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(err);
+  res.status(500).json({ message: "Internal server error" });
+});
+
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+mongoose
+  .connect(process.env.MONGO_URI || "")
+  .then(() => {
+    console.log("Mongo connected");
+    console.log("Mongo DB:", mongoose.connection.name);
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch((err) => console.error(err));

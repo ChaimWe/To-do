@@ -1,5 +1,5 @@
 import { Button, Card, Checkbox } from "antd";
-import type { Task } from "../interfaces/taskInterfaces";
+import type { Task } from "../../interfaces/taskInterfaces";
 import React from "react";
 
 function TaskCard({
@@ -37,7 +37,7 @@ function TaskCard({
         >
         Completed
       </Checkbox>
-      <p>Created on: {task.createdOn}</p>
+      <p>Created on: {new Date(task.createdOn).toLocaleDateString()}</p>
     </Card>
   );
 };

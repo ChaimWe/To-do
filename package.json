@@ -9,6 +9,7 @@
     "client": "cd client && npm start"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19"
+    "@types/cors": "^2.8.19",
+    "tsx": "^4.21.0"
   }
 }

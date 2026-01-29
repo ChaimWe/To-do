@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {deleteTask} from '../api/taskApi'
+import {deleteTask} from '../../api/taskApi'
+import { message } from "antd";
 
 
 export function useDeleteTask(){
@@ -11,8 +12,9 @@ export function useDeleteTask(){
       queryClient.invalidateQueries({queryKey:['tasks']});
     },
     onError:(error)=>{
-      console.error("Failed to update task ",error)
+      console.error("Failed to delete task ",error);
+      message.error("Failed to delete task")
     },
-    meta:{operationName: 'Update task'}
+    meta:{operationName: 'Delete task'}
   })
 }

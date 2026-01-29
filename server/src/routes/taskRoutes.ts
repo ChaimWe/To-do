@@ -1,14 +1,17 @@
 import express from "express";
-import { deleteTask, updateTask, createTask, getTasks } from "../controllers/taskController";
+import { deleteTask, updateTask, createTask, getTasks } from "../controllers/taskController.js";
+import { AuthenticateToken } from "../auth/AuthenticateToken.js";
+import { isOwnerOrAdmin } from "../auth/policies.js";
+import authorize from "../auth/authorize.js";
 
-const router = express.Router()
+const taskRoutes = express.Router()
 
-router.post("/create-task", createTask);
+taskRoutes.post("/create-task", AuthenticateToken, createTask);
 
-router.get("/tasks", getTasks);
+taskRoutes.get("/", AuthenticateToken, getTasks);
 
-router.patch("/task/:_id", updateTask);
+taskRoutes.put("/task/:_id", AuthenticateToken, authorize(isOwnerOrAdmin), updateTask);
 
-router.delete("/task/:_id", deleteTask);
+taskRoutes.delete("/task/:_id", AuthenticateToken, authorize(isOwnerOrAdmin), deleteTask);
 
-export default router;
+export default taskRoutes;

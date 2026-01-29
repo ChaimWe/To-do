@@ -1,20 +1,16 @@
-import axios from "axios";
 import { NewTask, Task } from "../interfaces/taskInterfaces";
+import { StatusFilter } from "../enums/StatusFilter";
+import API from "./API";
 
-const BASE_URL = "http://localhost:5000/api"
 
 export const createTask = (task: NewTask) =>
-  axios.post<Task>(BASE_URL+"/create-task", {
-    ...task,
-    createdOn: new Date().toLocaleDateString('en-GB'),
-    completed: false,
-  });
+  API.post<Task>("tasks/create-task", task);
 
 export const updateTask = (id: string, updates: Partial<Task>) =>
-  axios.patch<Task>(BASE_URL+`/task/${id}`, updates);
+  API.put<Task>(`tasks/task/${id}`, updates);
 
 export const deleteTask = (id: string) =>
-  axios.delete<Task>(BASE_URL+`/task/${id}`);
+  API.delete<Task>(`tasks/task/${id}`);
 
 export const fetchTasks = (filter: string, sort: string) =>
-    axios.get(BASE_URL+"/tasks", {params: {  completed: filter === "all" ? undefined : filter, sort }});
+    API.get("/tasks", {params: {  completed: filter === StatusFilter.All ? undefined : filter, sort }});

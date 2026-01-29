@@ -1,12 +1,11 @@
-// Full task from server
 export interface Task {
   _id: string;
   title: string;
   description?: string;
   category?: string;
-  createdOn: string;
+  createdOn: Date;
   completed: boolean;
+  owner: string;
 }
 
-// Type for user input when creating
-export type NewTask = Omit<Task, "_id" | "completed" |"createdOn">;
+export type NewTask = Omit<Task, "_id" | "completed" |"createdOn"|"owner">;

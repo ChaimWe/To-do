@@ -1,5 +1,5 @@
 import TaskCard from "./TaskCard";
-import type { Task } from "../interfaces/taskInterfaces";
+import type { Task } from "../../interfaces/taskInterfaces";
 import { Col, Row } from "antd";
 import React from 'react';
 
@@ -11,7 +11,7 @@ function TaskList({
 }: {
   data: Task[] | undefined;
   isLoading: boolean;
-  handleComplete: (_id: string) => void;
+  handleComplete: (task: Task) => void;
   handleDelete: (_id: string) => void;
 }) 
 
@@ -27,7 +27,7 @@ function TaskList({
             <TaskCard
               key={task._id}
               task={task}
-              onComplete={() => handleComplete(task._id)}
+              onComplete={() => handleComplete(task)}
               onDelete={() => handleDelete(task._id)}
             />
           </Col>

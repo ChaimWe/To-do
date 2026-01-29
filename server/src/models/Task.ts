@@ -2,20 +2,22 @@ import mongoose, { Document, Model } from "mongoose";
 
 // 1️⃣ TypeScript interface
 export interface ITask extends Document {
+  owner: string;
   title: string;
   description?: string;
   category?: string;
-  createdOn: string;
+  createdOn: Date;
   completed: boolean;
 }
 
 // 2️⃣ Mongoose schema
 const taskSchema = new mongoose.Schema<ITask>({
+  owner:{type: String, required:true},
   title: { type: String, required: true },
   description: { type: String },
   category: { type: String },
-  createdOn: { type: String },
-  completed: { type: Boolean, required: true },
+  createdOn: { type: Date, default: Date.now },
+  completed: { type: Boolean , default: false},
 });
 
 // 3️⃣ Mongoose model
