@@ -1,4 +1,4 @@
-import { LoginPayload, RegisterPayload } from "../interfaces/userInterfaces";
+import { LoginPayload, RegisterPayload } from "../interfaces/authInterfaces";
 import API from "./API";
 
 export const registerUser = async (data: RegisterPayload) => {

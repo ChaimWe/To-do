@@ -32,8 +32,8 @@ export async function getTasks(req: AuthenticatedRequest, res: Response) {
 
 export async function updateTask(req: AuthenticatedRequest, res: Response) {
   try {
-    const task = (req as any).task;
-    const updated = await Task.findByIdAndUpdate(task._id, req.body, {
+    const task = req.task;
+    const updated = await Task.findByIdAndUpdate(task!._id, req.body, {
       new: true,
     });
     res.status(200).json(updated);

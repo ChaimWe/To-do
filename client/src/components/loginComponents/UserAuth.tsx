@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRegister } from "../../hooks/userHooks/useRegister";
 import { useLogin } from "../../hooks/userHooks/useLogin";
 import { useCurrentUser } from "../../hooks/userHooks/useCurrentUser";
-import { RegisterPayload } from "../../interfaces/userInterfaces";
+import { RegisterPayload } from "../../interfaces/authInterfaces";
 import { useAuthControl } from "../../stores/AuthControl";
 
 export default function UserAuth() {
@@ -15,29 +15,27 @@ export default function UserAuth() {
   const [registerForm] = Form.useForm();
 
   const queryClient = useQueryClient();
-
   const { mutate: login, isPending: loginPending } = useLogin();
   const { mutate: register, isPending: registerPending } = useRegister();
   const { data: currentUser } = useCurrentUser();
-
   const { loginOpen, openLogin, closeLogin } = useAuthControl();
 
+
   const handleRegister = (
-    values: RegisterPayload & { confirmPassword: string }
+    values: RegisterPayload & { confirmPassword: string },
   ) => {
     const { confirmPassword, ...payload } = values;
 
     register(payload, {
       onSuccess: async () => {
-        await new Promise(resolve => setTimeout(resolve, 100))
-        await queryClient.invalidateQueries({queryKey: ["currentUser"]});
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
         closeLogin();
         registerForm.resetFields();
         message.success("Registration successful");
       },
       onError: (error: any) => {
-        const errMsg =
-          error?.response?.data?.message ?? "Registration failed";
+        const errMsg = error?.response?.data?.message ?? "Registration failed";
         message.error(errMsg);
       },
     });
@@ -46,8 +44,8 @@ export default function UserAuth() {
   const handleLogin = (values: { email: string; password: string }) => {
     login(values, {
       onSuccess: async () => {
-        await new Promise(resolve => setTimeout(resolve, 100))
-        await queryClient.invalidateQueries({queryKey:["currentUser"]});
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
         closeLogin();
         loginForm.resetFields();
         message.success("Welcome back!");
@@ -58,6 +56,7 @@ export default function UserAuth() {
       },
     });
   };
+
 
   return (
     <>
@@ -92,7 +91,7 @@ export default function UserAuth() {
               <Form.Item
                 name="email"
                 label="Email"
-                rules={[{ required: true }, {type: "email"}]}
+                rules={[{ required: true }, { type: "email" }]}
               >
                 <Input />
               </Form.Item>
@@ -124,11 +123,7 @@ export default function UserAuth() {
               onFinish={handleRegister}
               layout="vertical"
             >
-              <Form.Item
-                name="name"
-                label="Name"
-                rules={[{ required: true }]}
-              >
+              <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                 <Input />
               </Form.Item>
 
@@ -156,14 +151,11 @@ export default function UserAuth() {
                   { required: true },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
-                      if (
-                        !value ||
-                        getFieldValue("password") === value
-                      ) {
+                      if (!value || getFieldValue("password") === value) {
                         return Promise.resolve();
                       }
                       return Promise.reject(
-                        new Error("Passwords do not match")
+                        new Error("Passwords do not match"),
                       );
                     },
                   }),

@@ -2,11 +2,14 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import taskRoutes from "./routes/taskRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import adminRoutes from "./routes/adminRoutes.js";
+import { AuthenticateToken } from "./auth/AuthenticateToken.js";
+import { RequireAdmin } from "./auth/RequireAdmin.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,21 +26,30 @@ if (!process.env.MONGO_URI) {
 const app = express();
 
 const allowedOrigins = process.env.CORS_ORIGINS?.split(",");
-app.use(cookieParser())
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
-app.use("/api/tasks", taskRoutes);
+app.use("/api/tasks", AuthenticateToken, taskRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/admin", AuthenticateToken, RequireAdmin, adminRoutes);
 
-app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(err);
-  res.status(500).json({ message: "Internal server error" });
-});
-
+app.use(
+  (
+    err: unknown,
+    _req: express.Request,
+    res: express.Response,
+    _next: express.NextFunction,
+  ) => {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  },
+);
 
 const PORT = process.env.PORT || 5000;
 

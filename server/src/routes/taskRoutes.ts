@@ -6,12 +6,12 @@ import authorize from "../auth/authorize.js";
 
 const taskRoutes = express.Router()
 
-taskRoutes.post("/create-task", AuthenticateToken, createTask);
+taskRoutes.post("/create-task", createTask);
 
-taskRoutes.get("/", AuthenticateToken, getTasks);
+taskRoutes.get("/", getTasks);
 
-taskRoutes.put("/task/:_id", AuthenticateToken, authorize(isOwnerOrAdmin), updateTask);
+taskRoutes.put("/task/:_id", authorize(isOwnerOrAdmin), updateTask);
 
-taskRoutes.delete("/task/:_id", AuthenticateToken, authorize(isOwnerOrAdmin), deleteTask);
+taskRoutes.delete("/task/:_id", authorize(isOwnerOrAdmin), deleteTask);
 
 export default taskRoutes;
