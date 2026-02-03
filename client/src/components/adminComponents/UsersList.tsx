@@ -1,19 +1,17 @@
-import { Button, Card, List, Popconfirm, Tag } from "antd";
-import { User } from "../../interfaces/adminInterfaces";
-import { UserCard } from "./UserCard";
+import { List } from "antd";
+import type { UserListProps } from "../../interfaces/adminInterfaces";
+import UserCard from "./UserCard";
+import React from "react";
 
-export function UsersList({
+function UsersList({
   data,
   isLoading,
   editUser,
   deleteUser,
-}: {
-  data: User[];
-  isLoading: boolean;
-  editUser: (_id: string, updates: Partial<User>) => void;
-  deleteUser: (userId: string) => void;
-}) {
-  
+  userTasks,
+  userClick,
+  tasksLoading,
+}: UserListProps) {
   if (isLoading) return <p>Loading...</p>;
   if (!data || data.length === 0) return <p>No users found</p>;
 
@@ -23,9 +21,17 @@ export function UsersList({
       dataSource={data}
       renderItem={(user) => (
         <List.Item>
-         <UserCard user={user} editUser={editUser} deleteUser={deleteUser} />
+          <UserCard
+            user={user}
+            editUser={editUser}
+            deleteUser={deleteUser}
+            userTasks={userTasks}
+            userClick={userClick}
+            tasksLoading={tasksLoading}
+          />
         </List.Item>
       )}
     />
   );
 }
+export default React.memo(UsersList);

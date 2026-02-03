@@ -1,19 +1,30 @@
 import { Button, Radio } from "antd";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
+import {
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+  // SettingOutlined,
+} from "@ant-design/icons";
 import AddTask from "./taskComponents/AddTask";
 import Register from "./loginComponents/UserAuth";
 import React from "react";
 import { StatusFilter } from "../enums/StatusFilter";
-import { Logout } from "./loginComponents/Logout";
+import Logout from "./loginComponents/Logout";
+// import type { User } from "../interfaces/adminInterfaces";
 
 function Header({
   dateSort,
   dataSorting,
   statusFilter,
+  // currentUser,
+  // onAdminClick,
+  onTitleClick,
 }: {
   dateSort: boolean;
   dataSorting: () => void;
   statusFilter: (value: StatusFilter) => void;
+  // currentUser: User | null;
+  // onAdminClick: () => void;
+  onTitleClick: () => void;
 }) {
   return (
     <div
@@ -25,7 +36,9 @@ function Header({
         marginRight: "150px",
       }}
     >
-      <h1 style={{ margin: 0 }}>ToDo List</h1>
+      <h1 style={{ margin: 0 }} onClick={onTitleClick}>
+        ToDo List
+      </h1>
 
       <Radio.Group
         defaultValue={StatusFilter.All}
@@ -44,8 +57,12 @@ function Header({
         Sort by Date
       </Button>
       <AddTask />
+      {/* {currentUser?.role === "admin" && (
+        <Button icon={<SettingOutlined />} onClick={onAdminClick} />
+      )} */}
+
       <Register />
-      <Logout/>
+      <Logout />
     </div>
   );
 }

@@ -5,12 +5,14 @@ import { useState } from "react";
 import { useTasks } from "../hooks/taskHooks/useTasks";
 import { useUpdateTask } from "../hooks/taskHooks/useUpdateTask";
 import { useDeleteTask } from "../hooks/taskHooks/useDeleteTask";
-import { Task } from "../interfaces/taskInterfaces";
+import type { Task } from "../interfaces/taskInterfaces";
 import { useCurrentUser } from "../hooks/userHooks/useCurrentUser";
 import { StatusFilter } from "../enums/StatusFilter";
+import { useNavigate } from "react-router-dom";
+import AdminPage from "./AdminPage";
 
 export default function TaskPage() {
-  const [statusFilter, setStatusFilter] = useState(StatusFilter.All);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(StatusFilter.All);
   const [dataSort, setDataSort] = useState<boolean>(true);
   const { data, isLoading: tasksLoading } = useTasks(statusFilter, dataSort);
   const { mutate: updateTaskMutate } = useUpdateTask();
@@ -26,6 +28,7 @@ export default function TaskPage() {
   const handleDelete = (_id: string) => {
     deleteTaskMutate({ _id });
   };
+  const navigate = useNavigate();
 
   return (
     <Layout
@@ -40,18 +43,25 @@ export default function TaskPage() {
           statusFilter={setStatusFilter}
           dataSorting={() => setDataSort((prev) => !prev)}
           dateSort={dataSort}
+          // currentUser={user}
+          // onAdminClick={() => navigate("/admin")}
+          onTitleClick={() => navigate("/")}
         />
         <Divider>Task List</Divider>
         {userLoading ? (
           <p>User is loading...</p>
         ) : user ? (
-          <TaskList
-            data={data}
-            isLoading={tasksLoading}
-            handleComplete={handleComplete}
-            handleDelete={handleDelete}
-          />
-        ) : (
+  user.role === "admin" ? (
+    <AdminPage />
+  ) : (
+    <TaskList
+      data={data}
+      isLoading={tasksLoading}
+      handleComplete={handleComplete}
+      handleDelete={handleDelete}
+    />
+  )
+): (
           <p>Please log in to view your tasks</p>
         )}
       </Space>

@@ -1,18 +1,22 @@
-import { Button, Form, Input, Modal} from "antd";
+import { Button, Form, Input, message, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useSubmitTask } from "../../hooks/taskHooks/useSubmitTask";
-import { NewTask } from "../../interfaces/taskInterfaces";
+import type { NewTask } from "../../interfaces/taskInterfaces";
 
 export default function AddTask() {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState<boolean>(false);
   const { mutate: taskSubmitMutate } = useSubmitTask();
 
-  const handleSubmit = async (values: NewTask) => {
-    await taskSubmitMutate(values);
-    setVisible(false);
-    form.resetFields();
+  const handleSubmit = (values: NewTask) => {
+    taskSubmitMutate(values, {
+      onSuccess: () => {
+        setVisible(false);
+        form.resetFields();
+        message.success("Successfully added task");
+      },
+    });
   };
 
   return (
@@ -21,7 +25,9 @@ export default function AddTask() {
         icon={<PlusOutlined />}
         type="primary"
         onClick={() => setVisible(true)}
-      >Task</Button>
+      >
+        Task
+      </Button>
 
       <Modal
         title="Add new Task"

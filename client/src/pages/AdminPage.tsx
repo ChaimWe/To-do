@@ -1,24 +1,36 @@
-import { UsersList } from "../components/adminComponents/UsersList";
+import { useState } from "react";
+import UsersList from "../components/adminComponents/UsersList";
 import { useDeleteUser } from "../hooks/adminHooks/useDeleteUser";
 import { useEditUser } from "../hooks/adminHooks/useEditUser";
 import { useGetUsers } from "../hooks/adminHooks/useGetUsers";
-import { User } from "../interfaces/adminInterfaces";
+import useUserTasks from "../hooks/adminHooks/useUserTasks";
+import type { User } from "../interfaces/adminInterfaces";
 
 export default function AdminPage() {
-  const { data, isLoading: usersLoading } = useGetUsers();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const { data: users, isLoading: usersLoading } = useGetUsers();
   const { mutate: editUserMutate } = useEditUser();
   const { mutate: deleteUserMutate } = useDeleteUser();
+  const { data: userTasks = [], isLoading: tasksLoading } =
+    useUserTasks(selectedUserId);
+  const handleSelectUser = (_id: string) => {
+    setSelectedUserId(_id);
+  };
 
-  const handleEdit = (userId: string, updates: Partial<User>)=>
-    editUserMutate({_id: userId, updates: updates});
-  const handleDelete = (userId: string) => 
-    deleteUserMutate(userId);
+  const handleEdit = (userId: string, updates: Partial<User>) =>
+    editUserMutate({ _id: userId, updates: updates });
+  const handleDelete = (userId: string) => deleteUserMutate(userId);
   return (
-    <UsersList
-      data={data || []}
-      isLoading={usersLoading}
-      editUser={handleEdit}
-      deleteUser={handleDelete}
-    />
+    <>
+      <UsersList
+        data={users || []}
+        isLoading={usersLoading}
+        editUser={handleEdit}
+        deleteUser={handleDelete}
+        userClick={handleSelectUser}
+        userTasks={userTasks}
+        tasksLoading={tasksLoading}
+      />
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { User } from "../../interfaces/adminInterfaces";
+import type { User } from "../../interfaces/adminInterfaces";
 import { editUserApi } from "../../api/adminApi";
 import { message } from "antd";
 

@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AuthenticatedRequest } from "../auth/interfaces.js";
 import User from "../models/User.js";
+import Task from "../models/Task.js";
 
 export async function getUsers(req: AuthenticatedRequest, res: Response){
     try{
@@ -10,6 +11,16 @@ export async function getUsers(req: AuthenticatedRequest, res: Response){
         console.error("Get users error", err);
         res.status(500).json({message: "Unable to get users"});
     }
+};
+
+export async function getUserTasks(req: AuthenticatedRequest, res: Response){
+    try{
+        const userTasks = await Task.find({owner: req.params._id});
+        res.status(200).json(userTasks)
+    }catch(err){
+        console.log("User task error: ", err);
+        res.status(500).json({message: "Error"})
+    };
 };
 
 export async function editUser(req: AuthenticatedRequest, res:Response){
@@ -24,7 +35,7 @@ export async function editUser(req: AuthenticatedRequest, res:Response){
 
 export async function deleteUser(req: AuthenticatedRequest, res: Response){
     try{
-        await User.findByIdAndDelete(req.params.id);
+        await User.findByIdAndDelete(req.params._id);
         res.status(200).json({message: "User deleted successfully"})
     }catch(err){
         console.error("Delete user error: ", err);

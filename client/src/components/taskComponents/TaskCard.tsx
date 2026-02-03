@@ -8,10 +8,9 @@ function TaskCard({
   onDelete,
 }: {
   task: Task;
-  onComplete: (_id:string) => void;
-  onDelete: (_id:string) => void;
+  onComplete: (task: Task) => void;
+  onDelete: (_id: string) => void;
 }) {
-
   return (
     <Card
       title="Task Details"
@@ -20,9 +19,9 @@ function TaskCard({
           Delete
         </Button>
       }
-       style={{
-    backgroundColor: task.completed ? "#D6ECD2" : "#F8D7DA",
-  }}
+      style={{
+        backgroundColor: task.completed ? "#D6ECD2" : "#F8D7DA",
+      }}
     >
       <h3>{task.title}</h3>
       <p>
@@ -31,14 +30,11 @@ function TaskCard({
       <p>
         <strong>Category:</strong> {task.category}
       </p>
-        <Checkbox
-          checked={task.completed}
-          onChange={() => onComplete(task._id)}
-        >
+      <Checkbox checked={task.completed} onChange={() => onComplete(task)}>
         Completed
       </Checkbox>
       <p>Created on: {new Date(task.createdOn).toLocaleDateString()}</p>
     </Card>
   );
-};
+}
 export default React.memo(TaskCard);

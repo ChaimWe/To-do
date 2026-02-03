@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateTask } from "../../api/taskApi";
-import { Task } from "../../interfaces/taskInterfaces";
+import type { Task } from "../../interfaces/taskInterfaces";
 import { message } from "antd";
 
 export function useUpdateTask() {

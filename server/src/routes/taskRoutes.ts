@@ -1,6 +1,5 @@
 import express from "express";
 import { deleteTask, updateTask, createTask, getTasks } from "../controllers/taskController.js";
-import { AuthenticateToken } from "../auth/AuthenticateToken.js";
 import { isOwnerOrAdmin } from "../auth/policies.js";
 import authorize from "../auth/authorize.js";
 

@@ -2,11 +2,10 @@ import { Button, Form, Input, message, Modal, Segmented } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { useRegister } from "../../hooks/userHooks/useRegister";
 import { useLogin } from "../../hooks/userHooks/useLogin";
 import { useCurrentUser } from "../../hooks/userHooks/useCurrentUser";
-import { RegisterPayload } from "../../interfaces/authInterfaces";
+import type { RegisterPayload } from "../../interfaces/authInterfaces";
 import { useAuthControl } from "../../stores/AuthControl";
 
 export default function UserAuth() {
@@ -20,7 +19,6 @@ export default function UserAuth() {
   const { data: currentUser } = useCurrentUser();
   const { loginOpen, openLogin, closeLogin } = useAuthControl();
 
-
   const handleRegister = (
     values: RegisterPayload & { confirmPassword: string },
   ) => {
@@ -29,7 +27,10 @@ export default function UserAuth() {
     register(payload, {
       onSuccess: async () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
-        await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        await queryClient.invalidateQueries({
+          queryKey: ["currentUser"],
+          exact: true,
+        });
         closeLogin();
         registerForm.resetFields();
         message.success("Registration successful");
@@ -45,7 +46,10 @@ export default function UserAuth() {
     login(values, {
       onSuccess: async () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
-        await queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        await queryClient.invalidateQueries({
+          queryKey: ["currentUser"],
+          exact: true,
+        });
         closeLogin();
         loginForm.resetFields();
         message.success("Welcome back!");
@@ -56,7 +60,6 @@ export default function UserAuth() {
       },
     });
   };
-
 
   return (
     <>

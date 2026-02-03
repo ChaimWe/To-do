@@ -1,9 +1,11 @@
 import express from 'express';
-import { editUser, getUsers, deleteUser } from '../controllers/adminController.js';
+import { editUser, getUsers, deleteUser, getUserTasks } from '../controllers/adminController.js';
 
 const adminRoutes = express.Router();
 
 adminRoutes.get('/users',  getUsers);
+
+adminRoutes.get('/users/tasks/:_id',  getUserTasks);
 
 adminRoutes.put('/users/:_id', editUser);
 

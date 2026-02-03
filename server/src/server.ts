@@ -25,7 +25,7 @@ if (!process.env.MONGO_URI) {
 
 const app = express();
 
-const allowedOrigins = process.env.CORS_ORIGINS?.split(",");
+const allowedOrigins = process.env.CORS_ORIGINS?.split(",").map(origin => origin.trim().replace(/^['"]|['"]$/g, ""));
 app.use(cookieParser());
 app.use(
   cors({
